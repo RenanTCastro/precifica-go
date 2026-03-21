@@ -8,8 +8,9 @@
 .precificacao__main {
   flex: 1;
   min-width: 0;
+  max-width: 100%;
   padding: var(--space-xl);
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 .precificacao__header {
@@ -31,9 +32,10 @@
 
 .precificacao__layout {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
   gap: var(--space-xl);
   align-items: start;
+  min-width: 0;
 }
 
 .precificacao__form {
@@ -42,6 +44,7 @@
   gap: var(--space-lg);
   position: sticky;
   top: var(--space-xl);
+  min-width: 0;
 }
 
 .precificacao__card {
@@ -121,6 +124,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
+  min-width: 0;
 }
 
 .precificacao__cards {
@@ -174,6 +178,7 @@
   font-size: var(--text-h3);
   font-weight: 700;
   color: var(--color-text-primary);
+  word-break: break-word;
 }
 
 .precificacao__card-preco--ativo .precificacao__card-valor {
@@ -208,6 +213,7 @@
 .precificacao__card-mercado-valor {
   font-size: var(--text-h3);
   font-weight: 700;
+  word-break: break-word;
 }
 
 .precificacao__card-mercado--menor .precificacao__card-mercado-valor {
@@ -227,11 +233,12 @@
   border-radius: var(--radius-card);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   overflow: hidden;
+  min-width: 0;
 }
 
 @media (max-width: 1023px) {
   .precificacao__layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .precificacao__form {
@@ -239,6 +246,6 @@
   }
 
   .precificacao__cards-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
