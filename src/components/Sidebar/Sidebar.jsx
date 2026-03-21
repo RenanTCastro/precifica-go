@@ -1,12 +1,20 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { MenuIcon, XIcon } from "../icons";
+import { MenuIcon, XIcon, ChartIcon, DollarIcon, SettingsIcon, ChevronLeftIcon, ChevronRightIconMd } from "../icons";
+import logo from "../../assets/logo.svg";
+import logoWhite from "../../assets/logo_white.svg";
 import "./Sidebar.css";
 
+const ITEM_ICONS = {
+  dashboard: ChartIcon,
+  precificacao: DollarIcon,
+  configuracoes: SettingsIcon,
+};
+
 const DEFAULT_ITEMS = [
-  { path: "/dashboard", label: "Dashboard", badge: 24 },
-  { path: "/precificacao", label: "Precificação" },
-  { path: "/configuracoes", label: "Configurações" },
+  { path: "/dashboard", label: "Dashboard", badge: 24, iconKey: "dashboard" },
+  { path: "/precificacao", label: "Precificação", iconKey: "precificacao" },
+  { path: "/configuracoes", label: "Configurações", iconKey: "configuracoes" },
 ];
 
 const DEFAULT_USER = {
@@ -23,6 +31,7 @@ export function Sidebar({
   user = DEFAULT_USER,
 }) {
   const location = useLocation();
+  const [expanded, setExpanded] = useState(true);
 
   useEffect(() => {
     const handleEscape = (e) => e.key === "Escape" && onClose?.();
@@ -55,35 +64,56 @@ export function Sidebar({
       />
 
       <aside
-        className={`sidebar ${open ? "sidebar--open" : ""}`}
+        className={`sidebar ${open ? "sidebar--open" : ""} ${expanded ? "sidebar--expanded" : "sidebar--collapsed"}`}
       >
         <div className="sidebar__logo">
-          <span className="sidebar__logo-icon">PG</span>
-          <span className="sidebar__logo-text">Precifica Go</span>
+          <img
+            src={expanded ? logoWhite : logo}
+            alt="Precifica Go"
+            className="sidebar__logo-img"
+          />
         </div>
 
         <nav className="sidebar__nav">
-          {items.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`sidebar__nav-item ${location.pathname === item.path ? "sidebar__nav-item--active" : ""}`}
-              onClick={onClose}
-            >
-              <span>{item.label}</span>
-              {item.badge != null && (
-                <span className="sidebar__nav-badge">{item.badge}</span>
-              )}
-            </Link>
-          ))}
+          {items.map((item) => {
+            const iconKey = (item.iconKey ?? item.path.replace(/^\//, "")) || "dashboard";
+            const IconComponent = ITEM_ICONS[iconKey] ?? ChartIcon;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`sidebar__nav-item ${location.pathname === item.path ? "sidebar__nav-item--active" : ""}`}
+                onClick={onClose}
+                title={!expanded ? item.label : undefined}
+              >
+                <span className="sidebar__nav-icon">
+                  {IconComponent ? <IconComponent /> : null}
+                </span>
+                {expanded && <span className="sidebar__nav-label">{item.label}</span>}
+                {expanded && item.badge != null && (
+                  <span className="sidebar__nav-badge">{item.badge}</span>
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="sidebar__user">
-          <div className="sidebar__avatar">{user.avatar}</div>
-          <div className="sidebar__user-info">
-            <span className="sidebar__user-name">{user.name}</span>
-            <span className="sidebar__user-plan">{user.plan}</span>
+        <div className="sidebar__footer">
+          <div className="sidebar__user">
+            <div className="sidebar__avatar">{user.avatar}</div>
+            <div className="sidebar__user-info">
+              <span className="sidebar__user-name">{user.name}</span>
+              <span className="sidebar__user-plan">{user.plan}</span>
+            </div>
           </div>
+          <button
+            type="button"
+            className="sidebar__expand-toggle"
+            onClick={() => setExpanded((e) => !e)}
+            aria-label={expanded ? "Recolher menu" : "Expandir menu"}
+          >
+            {expanded ? <ChevronLeftIcon /> : <ChevronRightIconMd />}
+          </button>
         </div>
       </aside>
     </>
