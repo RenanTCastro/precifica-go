@@ -1,30 +1,16 @@
-# 🏷️PrecificaGo
+# React + Vite
 
-Esse projeto busca ajuda lojistas a precificar seus produtos utilizando uma calculadora e margem de venda integrado com busca via Google Shopping que vai listar uma lista de produtos relacionados aquele que o lojista pretende vender.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-# Ferramentas utilizadas
+Currently, two official plugins are available:
 
-Foram utilizadas as seguintes ferramentas para desenvolvimento do projeto:
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
--  [Figma](https://www.figma.com/)
-- [dbDiagram](https://dbdiagram.io/)
-- [React + Vite](https://pt.vite.dev/)
- 
-## Interface do usuário
+## React Compiler
 
-Foi utilizado a ferramenta [Figma](https://www.figma.com/) para gerar os layouts da interface de usuário (UI) e experiências (UX).
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
+## Expanding the ESLint configuration
 
-## Criação do Banco de Dados
-
-Foi utilizado o [dbDiagram](https://dbdiagram.io/) para criação do modelo ER do banco de dados, no qual consigo ter uma rápida visualização das tabelas e suas relações antes de implementar isso via código. 
-
-## 
-
-## Como executar a aplicação
-
-Para executar a aplicação, o usuário deve instalar as dependências por meio do comando:
-> npm install 
-
-Após isso pode executar no ambiente de desenvolvimento utilizando:
->npm run dev
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
