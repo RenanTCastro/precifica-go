@@ -1,12 +1,16 @@
+import { useNavigate } from "react-router-dom";
 import { AuthBranding, Button, Input } from "../../components";
 import { EnvelopeIcon, LockIcon } from "../../components/icons";
 import logoWhite from "../../assets/logo_white.svg";
 import "./Styles.css";
 
 export default function Login() {
-    const handleSubmit = async(e)=>{
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-    }
+        navigate("/dashboard");
+    };
 
     return (
         <div className="login">

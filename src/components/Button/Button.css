@@ -26,6 +26,18 @@
   background-color: var(--color-primary-hover);
 }
 
+.btn--secondary {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: var(--color-bg);
+  border-color: var(--color-text-auxiliary);
+  color: var(--color-text-primary);
+}
+
 .btn--full {
   width: 100%;
 }
