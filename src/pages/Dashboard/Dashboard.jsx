@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Sidebar } from "../../components";
+import { Button, FilterModal, Sidebar } from "../../components";
 import { KpiCard } from "../../components/KpiCard/KpiCard";
 import {
   DocumentIcon,
@@ -9,7 +9,6 @@ import {
   AlertIcon,
   PlusIcon,
   FilterIcon,
-  ExportIcon,
   ChevronRightIcon,
 } from "../../components/icons";
 import "./Dashboard.css";
@@ -95,6 +94,12 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [products] = useState(MOCK_PRODUCTS);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
+
+  const handleFilterApply = (filters) => {
+    // Aplicar filtros (integrar com backend depois)
+    console.log("Filtros aplicados:", filters);
+  };
 
   const handleVerMais = (product) => {
     // Navegar para detalhes do produto (implementar depois)
@@ -115,11 +120,7 @@ export default function Dashboard() {
             <h1 className="dashboard__title">Dashboard</h1>
             <p className="dashboard__subtitle">Todos os seus cálculos e comparações</p>
           </div>
-          <Button
-            variant="primary"
-            onClick={() => navigate("/precificacao")}
-            className="dashboard__btn-new"
-          >
+          <Button variant="primary" onClick={() => navigate("/precificacao")}>
             <PlusIcon />
             Novo cálculo
           </Button>
@@ -135,13 +136,9 @@ export default function Dashboard() {
           <div className="dashboard__products-header">
             <h2 className="dashboard__products-title">Produtos recentes</h2>
             <div className="dashboard__products-actions">
-              <Button variant="secondary" className="dashboard__btn-outline">
+              <Button variant="secondary" onClick={() => setFilterModalOpen(true)}>
                 <FilterIcon />
                 Filtrar
-              </Button>
-              <Button variant="secondary" className="dashboard__btn-outline">
-                <ExportIcon />
-                Exportar
               </Button>
             </div>
           </div>
@@ -199,6 +196,12 @@ export default function Dashboard() {
           </div>
         </section>
       </main>
+
+      <FilterModal
+        open={filterModalOpen}
+        onClose={() => setFilterModalOpen(false)}
+        onApply={handleFilterApply}
+      />
     </div>
   );
 }

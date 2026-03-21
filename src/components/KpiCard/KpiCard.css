@@ -1,5 +1,4 @@
 .kpi-card {
-  position: relative;
   flex: 1;
   min-width: 180px;
   padding: var(--space-lg);
@@ -12,15 +11,13 @@
 }
 
 .kpi-card__icon {
-  position: absolute;
-  top: var(--space-lg);
-  right: var(--space-lg);
   width: 40px;
   height: 40px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .kpi-card__icon--green {

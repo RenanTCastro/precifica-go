@@ -35,16 +35,6 @@
   margin: 0;
 }
 
-.dashboard__btn-new {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.dashboard__btn-new svg {
-  flex-shrink: 0;
-}
-
 /* KPI Cards */
 .dashboard__cards {
   display: grid;
@@ -81,16 +71,6 @@
 .dashboard__products-actions {
   display: flex;
   gap: var(--space-sm);
-}
-
-.dashboard__btn-outline {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.dashboard__btn-outline svg {
-  flex-shrink: 0;
 }
 
 /* Table */
@@ -206,7 +186,7 @@
     align-items: stretch;
   }
 
-  .dashboard__btn-new {
+  .dashboard__header .btn {
     width: 100%;
     justify-content: center;
   }
@@ -222,11 +202,6 @@
 
   .dashboard__products-actions {
     flex-wrap: wrap;
-  }
-
-  .dashboard__products-actions .btn {
-    flex: 1;
-    min-width: 120px;
   }
 
   .dashboard__table {
