@@ -1,0 +1,122 @@
+.login {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Form column - right */
+.login__form-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  background: var(--color-surface);
+}
+
+.login__form-wrapper {
+  width: 100%;
+  max-width: 400px;
+}
+
+.login__mobile-logo {
+  display: none;
+}
+
+.login__form-header {
+  margin-bottom: var(--space-xl);
+  text-align: center;
+}
+
+.login__form-title {
+  margin: 0 0 var(--space-sm);
+  font-size: var(--text-h2);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.login__form-subtitle {
+  margin: 0;
+  font-size: var(--text-body-md);
+  color: var(--color-text-secondary);
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.login__forgot {
+  align-self: flex-end;
+  font-size: var(--text-body-sm);
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  margin-top: calc(-1 * var(--space-sm));
+}
+
+.login__forgot:hover {
+  text-decoration: underline;
+  color: var(--color-primary-hover);
+}
+
+.login__signup {
+  margin: 0;
+  text-align: center;
+  font-size: var(--text-body-md);
+  color: var(--color-text-secondary);
+}
+
+.login__signup-link {
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.login__signup-link:hover {
+  text-decoration: underline;
+  color: var(--color-primary-hover);
+}
+
+/* Responsive */
+@media (max-width: 1023px) {
+  .login {
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .login__form-area {
+    flex: 1;
+    padding: var(--space-lg);
+  }
+}
+
+@media (max-width: 767px) {
+  .login__mobile-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-lg);
+  }
+
+  .login__mobile-logo img {
+    height: 36px;
+    width: auto;
+  }
+
+  .login__form-area {
+    padding: var(--space-md);
+    align-items: flex-start;
+  }
+
+  .login__form-wrapper {
+    padding: 0;
+  }
+
+  .login__form-title {
+    font-size: var(--text-h3);
+  }
+}

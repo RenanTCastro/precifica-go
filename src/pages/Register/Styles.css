@@ -1,0 +1,126 @@
+.register {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Form column - right */
+.register__form-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  background: var(--color-bg);
+}
+
+.register__form-wrapper {
+  width: 100%;
+  max-width: 400px;
+}
+
+.register__mobile-logo {
+  display: none;
+}
+
+.register__form-header {
+  margin-bottom: var(--space-xl);
+  text-align: center;
+}
+
+.register__form-title {
+  margin: 0 0 var(--space-sm);
+  font-size: var(--text-h2);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.register__form-subtitle {
+  margin: 0;
+  font-size: var(--text-body-md);
+  color: var(--color-text-secondary);
+}
+
+.register__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.register__login {
+  margin: 0;
+  text-align: center;
+  font-size: var(--text-body-md);
+  color: var(--color-text-secondary);
+}
+
+.register__login-link {
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.register__login-link:hover {
+  text-decoration: underline;
+  color: var(--color-primary-hover);
+}
+
+.register__terms {
+  margin: var(--space-lg) 0 0;
+  text-align: center;
+  font-size: var(--text-body-sm);
+  color: var(--color-text-auxiliary);
+  line-height: 1.5;
+}
+
+.register__terms-link {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.register__terms-link:hover {
+  text-decoration: underline;
+  color: var(--color-primary-hover);
+}
+
+/* Responsive */
+@media (max-width: 1023px) {
+  .register {
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .register__form-area {
+    flex: 1;
+    padding: var(--space-lg);
+  }
+}
+
+@media (max-width: 767px) {
+  .register__mobile-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-lg);
+  }
+
+  .register__mobile-logo img {
+    height: 36px;
+    width: auto;
+  }
+
+  .register__form-area {
+    padding: var(--space-md);
+    align-items: flex-start;
+  }
+
+  .register__form-wrapper {
+    padding: 0;
+  }
+
+  .register__form-title {
+    font-size: var(--text-h3);
+  }
+}

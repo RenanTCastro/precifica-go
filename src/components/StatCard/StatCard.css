@@ -1,0 +1,23 @@
+.stat-card {
+  flex: 1;
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-card);
+}
+
+.stat-card__value {
+  font-size: var(--text-h2);
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+}
+
+.stat-card__label {
+  font-size: var(--text-body-sm);
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.3;
+}

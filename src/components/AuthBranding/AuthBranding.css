@@ -1,0 +1,113 @@
+.auth-branding {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-xl);
+  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary-hover) 50%, #14532d 100%);
+  overflow: hidden;
+}
+
+.auth-branding__logo img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+.auth-branding__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-lg);
+  max-width: 480px;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-branding__headline {
+  margin: 0;
+  font-size: var(--text-h1);
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+}
+
+.auth-branding__subtext {
+  margin: 0;
+  font-size: var(--text-body-md);
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+}
+
+.auth-branding__stats {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+}
+
+.auth-branding__decor {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.12);
+  pointer-events: none;
+}
+
+.auth-branding__decor::before,
+.auth-branding__decor::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.auth-branding__decor::before {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  right: -100px;
+}
+
+.auth-branding__decor::after {
+  width: 300px;
+  height: 300px;
+  bottom: -50px;
+  left: -80px;
+}
+
+/* Responsive */
+@media (max-width: 1023px) {
+  .auth-branding {
+    flex: 0 0 auto;
+    padding: var(--space-lg);
+  }
+
+  .auth-branding__content {
+    gap: var(--space-md);
+  }
+
+  .auth-branding__headline {
+    font-size: var(--text-h2);
+  }
+
+  .auth-branding__subtext {
+    font-size: var(--text-body-sm);
+  }
+
+  .auth-branding__stats {
+    margin-top: var(--space-lg);
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+}
+
+@media (max-width: 767px) {
+  .auth-branding {
+    display: none;
+  }
+}
