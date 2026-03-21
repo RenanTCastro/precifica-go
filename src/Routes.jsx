@@ -3,6 +3,7 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Precificacao from "./pages/Precificacao/Precificacao";
+import Configuracoes from "./pages/Configuracoes/Configuracoes";
 
 const router = createBrowserRouter([
     {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
     {
         path: "/precificacao",
         element: <Precificacao />,
+    },
+    {
+        path: "/configuracoes",
+        element: <Configuracoes />,
     },
     {
         path: "/landing",

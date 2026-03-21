@@ -134,7 +134,7 @@ export default function Dashboard() {
 
         <section className="dashboard__products">
           <div className="dashboard__products-header">
-            <h2 className="dashboard__products-title">Produtos recentes</h2>
+            <h2 className="dashboard__products-title">Produtos</h2>
             <div className="dashboard__products-actions">
               <Button variant="secondary" onClick={() => setFilterModalOpen(true)}>
                 <FilterIcon />

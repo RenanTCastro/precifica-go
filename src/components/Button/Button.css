@@ -43,6 +43,19 @@
   color: var(--color-text-primary);
 }
 
+.btn--danger {
+  background: transparent;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: #fef2f2;
+  border-color: #dc2626;
+  color: #b91c1c;
+}
+
 .btn--full {
   width: 100%;
 }
