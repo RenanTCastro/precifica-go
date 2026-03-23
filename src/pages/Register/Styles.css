@@ -49,6 +49,15 @@
   margin-bottom: var(--space-lg);
 }
 
+.register__error {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-body-sm);
+  color: var(--color-error, #dc2626);
+  background: rgba(220, 38, 38, 0.08);
+  border-radius: var(--radius-sm, 6px);
+}
+
 .register__login {
   margin: 0;
   text-align: center;

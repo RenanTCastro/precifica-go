@@ -1,13 +1,33 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthBranding, Button, Input } from "../../components";
 import { UserIcon, EnvelopeIcon, LockIcon } from "../../components/icons";
+import { register, setAuthData } from "../../services/api";
 import logoWhite from "../../assets/logo_white.svg";
 import "./Styles.css";
 
 export default function Register() {
-  function handleSubmit(e) {
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  }
+    setError("");
+    setLoading(true);
+    try {
+      const { user, token } = await register(name, email, password);
+      setAuthData({ token, user });
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err.message || "Erro ao cadastrar. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="register">
@@ -29,26 +49,44 @@ export default function Register() {
             <p className="register__form-subtitle">14 dias grátis · Sem cartão de crédito</p>
           </header>
           <form onSubmit={handleSubmit} className="register__form">
+            {error && (
+              <p className="register__error" role="alert">
+                {error}
+              </p>
+            )}
             <Input
               label="Nome completo"
               type="text"
               icon={<UserIcon />}
               placeholder="João Silva"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              autoComplete="name"
             />
             <Input
               label="E-mail"
               type="email"
               icon={<EnvelopeIcon />}
               placeholder="joao@empresa.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
             />
             <Input
               label="Senha"
               type="password"
               icon={<LockIcon />}
               placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              autoComplete="new-password"
             />
-            <Button type="submit" fullWidth>
-              Criar conta grátis
+            <Button type="submit" fullWidth disabled={loading}>
+              {loading ? "Criando conta..." : "Criar conta grátis"}
             </Button>
           </form>
           <p className="register__login">
