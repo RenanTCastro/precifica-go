@@ -1,29 +1,18 @@
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 const TOKEN_KEY = "precifica_token";
-const USER_KEY = "precifica_user";
 
 export function getStoredToken() {
   return localStorage.getItem(TOKEN_KEY);
 }
 
-export function getStoredUser() {
-  try {
-    const user = localStorage.getItem(USER_KEY);
-    return user ? JSON.parse(user) : null;
-  } catch {
-    return null;
-  }
-}
-
-export function setAuthData({ token, user }) {
+export function setAuthData({ token }) {
   localStorage.setItem(TOKEN_KEY, token);
-  localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
 export function clearAuthData() {
   localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(USER_KEY);
+  localStorage.removeItem("precifica_user"); // cleanup legado
 }
 
 export async function login(email, password) {

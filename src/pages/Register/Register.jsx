@@ -19,8 +19,8 @@ export default function Register() {
     setError("");
     setLoading(true);
     try {
-      const { user, token } = await register(name, email, password);
-      setAuthData({ token, user });
+      const { token } = await register(name, email, password);
+      setAuthData({ token });
       navigate("/dashboard");
     } catch (err) {
       setError(err.message || "Erro ao cadastrar. Tente novamente.");

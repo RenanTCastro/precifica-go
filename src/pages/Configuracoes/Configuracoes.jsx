@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Sidebar } from "../../components";
 import { LogOutIcon } from "../../components/icons";
+import { clearAuthData } from "../../services/api";
 import "./Configuracoes.css";
 
 const DEFAULT_USER = {
@@ -16,8 +17,8 @@ export default function Configuracoes() {
   const user = DEFAULT_USER;
 
   const handleLogout = () => {
-    // TODO: integrar com auth real
-    navigate("/login");
+    clearAuthData();
+    navigate("/login", { replace: true });
   };
 
   return (

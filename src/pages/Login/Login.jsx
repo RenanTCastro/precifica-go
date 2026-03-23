@@ -18,8 +18,8 @@ export default function Login() {
         setError("");
         setLoading(true);
         try {
-            const { user, token } = await login(email, password);
-            setAuthData({ token, user });
+            const { token } = await login(email, password);
+            setAuthData({ token });
             navigate("/dashboard");
         } catch (err) {
             setError(err.message || "Erro ao fazer login. Tente novamente.");

@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -8,19 +9,35 @@ import Configuracoes from "./pages/Configuracoes/Configuracoes";
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Dashboard />,
+        element: (
+            <ProtectedRoute>
+                <Dashboard />
+            </ProtectedRoute>
+        ),
     },
     {
         path: "/dashboard",
-        element: <Dashboard />,
+        element: (
+            <ProtectedRoute>
+                <Dashboard />
+            </ProtectedRoute>
+        ),
     },
     {
         path: "/precificacao",
-        element: <Precificacao />,
+        element: (
+            <ProtectedRoute>
+                <Precificacao />
+            </ProtectedRoute>
+        ),
     },
     {
         path: "/configuracoes",
-        element: <Configuracoes />,
+        element: (
+            <ProtectedRoute>
+                <Configuracoes />
+            </ProtectedRoute>
+        ),
     },
     {
         path: "/landing",
