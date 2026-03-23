@@ -1,35 +1,8 @@
 import { useState } from "react";
 import { Button, Input, Sidebar } from "../../components";
 import { PricingTable } from "../../components/PricingTable/PricingTable";
+import { buscarProdutosMercado } from "../../services/api";
 import "./Precificacao.css";
-
-// Mock: produtos do mercado (resultado de busca)
-const MOCK_PRODUTOS_MERCADO = [
-  {
-    id: 1,
-    imagem: null,
-    produto: "Tênis Nike Air Max 270",
-    loja: "Magazine Luiza",
-    preco: 249.9,
-    link: "https://www.magazineluiza.com.br/tenis-nike-air-max-270/p/example1",
-  },
-  {
-    id: 2,
-    imagem: null,
-    produto: "Tênis Nike Air Max 270",
-    loja: "Amazon",
-    preco: 289.5,
-    link: "https://www.amazon.com.br/tenis-nike-air-max-270/p/example2",
-  },
-  {
-    id: 3,
-    imagem: null,
-    produto: "Tênis Nike Air Max 270",
-    loja: "Mercado Livre",
-    preco: 369.0,
-    link: "https://www.mercadolivre.com.br/tenis-nike-air-max-270/p/example3",
-  },
-];
 
 function calcularPrecoSugerido(custo, margem, custosFixos = 0, custosVariaveis = 0) {
   const margemSegura = Math.min(margem, 99.99);
@@ -49,6 +22,8 @@ export default function Precificacao() {
   const [custosVariaveis, setCustosVariaveis] = useState(0);
   const [margemSelecionada, setMargemSelecionada] = useState(30);
   const [produtosMercado, setProdutosMercado] = useState([]);
+  const [isBuscandoProdutos, setIsBuscandoProdutos] = useState(false);
+  const [erroBusca, setErroBusca] = useState(null);
 
   const precoSugerido = calcularPrecoSugerido(precoCusto, margemSelecionada, custosFixos, custosVariaveis);
 
@@ -67,8 +42,18 @@ export default function Precificacao() {
       ? produtosMercado.reduce((acc, p) => acc + p.preco, 0) / produtosMercado.length
       : 0;
 
-  const handleCalcular = () => {
-    setProdutosMercado(MOCK_PRODUTOS_MERCADO);
+  const handleCalcular = async () => {
+    setErroBusca(null);
+    setIsBuscandoProdutos(true);
+    try {
+      const produtos = await buscarProdutosMercado(nomeProduto);
+      setProdutosMercado(produtos);
+    } catch (err) {
+      setErroBusca(err.message || "Erro ao buscar preços do mercado");
+      setProdutosMercado([]);
+    } finally {
+      setIsBuscandoProdutos(false);
+    }
   };
 
   return (
@@ -147,8 +132,18 @@ export default function Precificacao() {
               </div>
             </div>
 
-            <Button variant="primary" fullWidth onClick={handleCalcular}>
-              Calcular + Buscar Preços
+            {erroBusca && (
+              <p className="precificacao__erro" role="alert">
+                {erroBusca}
+              </p>
+            )}
+            <Button
+              variant="primary"
+              fullWidth
+              onClick={handleCalcular}
+              disabled={isBuscandoProdutos}
+            >
+              {isBuscandoProdutos ? "Buscando..." : "Calcular + Buscar Preços"}
             </Button>
           </aside>
 

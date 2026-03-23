@@ -120,6 +120,12 @@
   text-align: center;
 }
 
+.precificacao__erro {
+  font-size: var(--text-body-sm);
+  color: #ef4444;
+  margin: 0;
+}
+
 .precificacao__content {
   display: flex;
   flex-direction: column;

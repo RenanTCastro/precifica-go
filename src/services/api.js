@@ -38,3 +38,21 @@ export async function register(name, email, password) {
   if (!res.ok) throw new Error(data.error || "Erro ao cadastrar");
   return data;
 }
+
+export async function buscarProdutosMercado(nomeProduto) {
+  const token = getStoredToken();
+  const headers = {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+
+  const res = await fetch(`${API_URL}/produtos-mercado`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ query: nomeProduto }),
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Erro ao buscar preços do mercado");
+  return data;
+}
