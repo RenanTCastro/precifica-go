@@ -69,6 +69,19 @@ export async function listarProdutos() {
   return data;
 }
 
+export async function listarProdutosDashboard({ page = 1, limit = 10, status, produto } = {}) {
+  const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+  if (status) params.set("status", status);
+  if (produto) params.set("produto", produto);
+  const res = await fetch(`${API_URL}/produtos?${params}`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Erro ao listar produtos");
+  return data;
+}
+
 export async function buscarProduto(id) {
   const res = await fetch(`${API_URL}/produtos/${id}`, {
     headers: getAuthHeaders(),
