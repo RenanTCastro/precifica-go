@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button, Input, Sidebar } from "../../components";
 import { PricingTable } from "../../components/PricingTable/PricingTable";
-import { buscarProdutosMercado } from "../../services/api";
+import { buscarProdutosMercado, salvarProduto, atualizarProduto } from "../../services/api";
 import { extrairQuantidadeDoNome } from "../../utils/quantidadeParser";
 import "./Precificacao.css";
 
@@ -15,18 +15,49 @@ function formatarMoeda(valor) {
   return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
+const INITIAL_VALUES = {
+  nomeProduto: "",
+  precoCusto: 0,
+  custosFixos: 0,
+  custosVariaveis: 0,
+  margemSelecionada: 0,
+};
+
 export default function Precificacao() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [nomeProduto, setNomeProduto] = useState("Tênis Nike Air Max 270");
-  const [precoCusto, setPrecoCusto] = useState(180);
-  const [custosFixos, setCustosFixos] = useState(0);
-  const [custosVariaveis, setCustosVariaveis] = useState(0);
-  const [margemSelecionada, setMargemSelecionada] = useState(30);
+  const [nomeProduto, setNomeProduto] = useState(INITIAL_VALUES.nomeProduto);
+  const [precoCusto, setPrecoCusto] = useState(INITIAL_VALUES.precoCusto);
+  const [custosFixos, setCustosFixos] = useState(INITIAL_VALUES.custosFixos);
+  const [custosVariaveis, setCustosVariaveis] = useState(INITIAL_VALUES.custosVariaveis);
+  const [margemSelecionada, setMargemSelecionada] = useState(INITIAL_VALUES.margemSelecionada);
+  const [savedValues, setSavedValues] = useState(INITIAL_VALUES);
   const [produtosMercado, setProdutosMercado] = useState([]);
   const [quantidades, setQuantidades] = useState({});
   const [desativados, setDesativados] = useState({});
   const [isBuscandoProdutos, setIsBuscandoProdutos] = useState(false);
   const [erroBusca, setErroBusca] = useState(null);
+  const [ultimoNomeBuscado, setUltimoNomeBuscado] = useState(INITIAL_VALUES.nomeProduto);
+  const [produtoId, setProdutoId] = useState(null);
+  const [relacionadosDirty, setRelacionadosDirty] = useState(false);
+  const [salvando, setSalvando] = useState(false);
+  const [erroSalvar, setErroSalvar] = useState(null);
+
+  const podeBuscar = nomeProduto.trim() !== "" && nomeProduto !== ultimoNomeBuscado;
+
+  const currentValues = {
+    nomeProduto,
+    precoCusto,
+    custosFixos,
+    custosVariaveis,
+    margemSelecionada,
+  };
+  const formDirty =
+    currentValues.nomeProduto !== savedValues.nomeProduto ||
+    currentValues.precoCusto !== savedValues.precoCusto ||
+    currentValues.custosFixos !== savedValues.custosFixos ||
+    currentValues.custosVariaveis !== savedValues.custosVariaveis ||
+    currentValues.margemSelecionada !== savedValues.margemSelecionada;
+  const isDirty = formDirty || relacionadosDirty;
 
   // Inicializa quantidades a partir do nome do produto quando produtos mudam
   useEffect(() => {
@@ -64,6 +95,7 @@ export default function Precificacao() {
 
   const handleQuantidadeChange = (id, val) => {
     setQuantidades((prev) => ({ ...prev, [id]: Number(val) }));
+    setRelacionadosDirty(true);
   };
 
   const handleDesativarChange = (id, ativo) => {
@@ -73,14 +105,54 @@ export default function Precificacao() {
       else next[id] = true;
       return next;
     });
+    setRelacionadosDirty(true);
   };
 
-  const handleCalcular = async () => {
+  const handleSalvarProduto = async () => {
+    if (!nomeProduto.trim()) return;
+    setErroSalvar(null);
+    setSalvando(true);
+    const relacionados = produtosMercado.map((p) => ({
+      nome: p.produto,
+      loja: p.loja || "",
+      preco: p.preco,
+      link: p.link || "",
+      imagem: p.imagem && !String(p.imagem).startsWith("data:") ? p.imagem : null,
+      quantidade: quantidades[p.id] ?? 1,
+      ativo: !desativados[p.id],
+    }));
+    const payload = {
+      nome: nomeProduto.trim(),
+      precoCusto: Number(precoCusto) || 0,
+      custosFixos: Number(custosFixos) || 0,
+      custosVariaveis: Number(custosVariaveis) || 0,
+      margemDesejada: Number(margemSelecionada) || 0,
+      relacionados,
+    };
+    try {
+      if (produtoId) {
+        await atualizarProduto(produtoId, payload);
+      } else {
+        const res = await salvarProduto(payload);
+        setProdutoId(res.id);
+      }
+      setSavedValues(currentValues);
+      setRelacionadosDirty(false);
+    } catch (err) {
+      setErroSalvar(err.message || "Erro ao salvar produto");
+    } finally {
+      setSalvando(false);
+    }
+  };
+
+  const handleBuscarProdutos = async () => {
     setErroBusca(null);
     setIsBuscandoProdutos(true);
     try {
       const produtos = await buscarProdutosMercado(nomeProduto);
       setProdutosMercado(produtos);
+      setUltimoNomeBuscado(nomeProduto);
+      setRelacionadosDirty(true);
     } catch (err) {
       setErroBusca(err.message || "Erro ao buscar preços do mercado");
       setProdutosMercado([]);
@@ -165,18 +237,18 @@ export default function Precificacao() {
               </div>
             </div>
 
-            {erroBusca && (
+            {erroSalvar && (
               <p className="precificacao__erro" role="alert">
-                {erroBusca}
+                {erroSalvar}
               </p>
             )}
             <Button
               variant="primary"
               fullWidth
-              onClick={handleCalcular}
-              disabled={isBuscandoProdutos}
+              onClick={handleSalvarProduto}
+              disabled={!nomeProduto.trim() || !isDirty || salvando}
             >
-              {isBuscandoProdutos ? "Buscando..." : "Calcular + Buscar Preços"}
+              {salvando ? "Salvando..." : produtoId ? "Atualizar produto" : "Criar produto"}
             </Button>
           </aside>
 
@@ -228,14 +300,35 @@ export default function Precificacao() {
             </div>
 
             <div className="precificacao__table-section">
-              <PricingTable
-                produtos={produtosMercado}
-                precoSugerido={precoSugerido}
-                quantidades={quantidades}
-                desativados={desativados}
-                onQuantidadeChange={handleQuantidadeChange}
-                onDesativarChange={handleDesativarChange}
-              />
+              {isBuscandoProdutos ? (
+                <div className="precificacao__table-loading">
+                  <div className="precificacao__spinner" aria-hidden="true" />
+                  <p>Buscando preços do mercado...</p>
+                </div>
+              ) : (
+                <PricingTable
+                  produtos={produtosMercado}
+                  precoSugerido={precoSugerido}
+                  quantidades={quantidades}
+                  desativados={desativados}
+                  onQuantidadeChange={handleQuantidadeChange}
+                  onDesativarChange={handleDesativarChange}
+                />
+              )}
+              {erroBusca && (
+                <p className="precificacao__erro precificacao__erro--inline" role="alert">
+                  {erroBusca}
+                </p>
+              )}
+              <div className="precificacao__table-footer">
+                <Button
+                  variant="primary"
+                  onClick={handleBuscarProdutos}
+                  disabled={!podeBuscar || isBuscandoProdutos}
+                >
+                  Buscar produtos
+                </Button>
+              </div>
             </div>
           </section>
         </div>

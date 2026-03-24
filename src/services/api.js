@@ -39,20 +39,66 @@ export async function register(name, email, password) {
   return data;
 }
 
-export async function buscarProdutosMercado(nomeProduto) {
+function getAuthHeaders() {
   const token = getStoredToken();
-  const headers = {
+  return {
     "Content-Type": "application/json",
     ...(token && { Authorization: `Bearer ${token}` }),
   };
+}
 
+export async function buscarProdutosMercado(nomeProduto) {
   const res = await fetch(`${API_URL}/produtos-mercado`, {
     method: "POST",
-    headers,
+    headers: getAuthHeaders(),
     body: JSON.stringify({ query: nomeProduto }),
   });
 
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || "Erro ao buscar preços do mercado");
+  return data;
+}
+
+export async function listarProdutos() {
+  const res = await fetch(`${API_URL}/produtos`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Erro ao listar produtos");
+  return data;
+}
+
+export async function buscarProduto(id) {
+  const res = await fetch(`${API_URL}/produtos/${id}`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Erro ao buscar produto");
+  return data;
+}
+
+export async function salvarProduto(payload) {
+  const res = await fetch(`${API_URL}/produtos`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Erro ao salvar produto");
+  return data;
+}
+
+export async function atualizarProduto(id, payload) {
+  const res = await fetch(`${API_URL}/produtos/${id}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Erro ao atualizar produto");
   return data;
 }
