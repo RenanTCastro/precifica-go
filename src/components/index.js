@@ -1,5 +1,6 @@
 export { AuthBranding } from "./AuthBranding/AuthBranding";
 export { Button } from "./Button/Button";
+export { ConfirmModal } from "./ConfirmModal/ConfirmModal";
 export { FilterModal } from "./FilterModal/FilterModal";
 export { Input } from "./Input/Input";
 export { KpiCard } from "./KpiCard/KpiCard";

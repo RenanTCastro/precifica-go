@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { unstable_usePrompt } from "react-router-dom";
-import { Button, Input, Sidebar } from "../../components";
+import { useBlocker } from "react-router-dom";
+import { Button, Input, Sidebar, ConfirmModal } from "../../components";
 import { PricingTable } from "../../components/PricingTable/PricingTable";
 import { buscarProdutosMercado, salvarProduto, atualizarProduto } from "../../services/api";
 import { extrairQuantidadeDoNome } from "../../utils/quantidadeParser";
@@ -60,10 +60,10 @@ export default function Precificacao() {
     currentValues.margemSelecionada !== savedValues.margemSelecionada;
   const isDirty = formDirty || relacionadosDirty;
 
-  unstable_usePrompt({
-    when: isDirty,
-    message: "Você tem informações não salvas. Deseja sair mesmo assim?",
-  });
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      isDirty && currentLocation.pathname !== nextLocation.pathname
+  );
 
   useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -174,6 +174,18 @@ export default function Precificacao() {
       setProdutosMercado([]);
     } finally {
       setIsBuscandoProdutos(false);
+    }
+  };
+
+  const handleConfirmSair = () => {
+    if (blocker.state === "blocked") {
+      blocker.proceed();
+    }
+  };
+
+  const handleCancelarSair = () => {
+    if (blocker.state === "blocked") {
+      blocker.reset();
     }
   };
 
@@ -369,6 +381,16 @@ export default function Precificacao() {
           </section>
         </div>
       </main>
+
+      <ConfirmModal
+        open={blocker.state === "blocked"}
+        onClose={handleCancelarSair}
+        onConfirm={handleConfirmSair}
+        title="Sair sem salvar?"
+        message="Você tem informações não salvas. Deseja sair mesmo assim?"
+        confirmLabel="Sair"
+        cancelLabel="Ficar"
+      />
     </div>
   );
 }

@@ -1,0 +1,12 @@
+.confirm-modal__message {
+  margin: 0 0 var(--space-xl);
+  font-size: var(--text-body-md);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.confirm-modal__actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: flex-end;
+}

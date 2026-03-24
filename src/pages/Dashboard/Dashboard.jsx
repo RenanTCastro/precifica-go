@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, FilterModal, Sidebar } from "../../components";
+import { Button, ConfirmModal, FilterModal, Sidebar } from "../../components";
 import { KpiCard } from "../../components/KpiCard/KpiCard";
 import {
   DocumentIcon,
@@ -10,8 +10,9 @@ import {
   PlusIcon,
   FilterIcon,
   ChevronRightIcon,
+  TrashIcon,
 } from "../../components/icons";
-import { listarProdutosDashboard } from "../../services/api";
+import { listarProdutosDashboard, excluirProduto } from "../../services/api";
 import "./Dashboard.css";
 
 const KPI_TEMPLATE = [
@@ -57,6 +58,9 @@ export default function Dashboard() {
   const [filters, setFilters] = useState({ status: "", produto: "" });
   const [menuOpen, setMenuOpen] = useState(false);
   const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+  const [excluindoId, setExcluindoId] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -75,7 +79,7 @@ export default function Dashboard() {
       })
       .catch((err) => setError(err.message || "Erro ao carregar produtos"))
       .finally(() => setLoading(false));
-  }, [page, filters.status, filters.produto]);
+  }, [page, filters.status, filters.produto, refreshKey]);
 
   const handleFilterApply = (newFilters) => {
     setFilters({ status: newFilters.status || "", produto: (newFilters.produto || "").trim() });
@@ -85,6 +89,24 @@ export default function Dashboard() {
 
   const handleVerMais = (product) => {
     navigate(`/precificacao?id=${product.id}`);
+  };
+
+  const handleExcluirClick = (product) => {
+    setProductToDelete(product);
+  };
+
+  const handleConfirmExcluir = async () => {
+    if (!productToDelete) return;
+    setExcluindoId(productToDelete.id);
+    try {
+      await excluirProduto(productToDelete.id);
+      setProductToDelete(null);
+      setRefreshKey((k) => k + 1);
+    } catch (err) {
+      setError(err.message || "Erro ao excluir produto");
+    } finally {
+      setExcluindoId(null);
+    }
   };
 
   return (
@@ -184,14 +206,25 @@ export default function Dashboard() {
                           </span>
                         </td>
                         <td>
-                          <button
-                            type="button"
-                            className="dashboard__btn-ver-mais"
-                            onClick={() => handleVerMais(product)}
-                          >
-                            Ver mais
-                            <ChevronRightIcon />
-                          </button>
+                          <div className="dashboard__table-actions">
+                            <button
+                              type="button"
+                              className="dashboard__btn-ver-mais"
+                              onClick={() => handleVerMais(product)}
+                            >
+                              Ver mais
+                              <ChevronRightIcon />
+                            </button>
+                            <button
+                              type="button"
+                              className="dashboard__btn-excluir"
+                              onClick={() => handleExcluirClick(product)}
+                              disabled={excluindoId === product.id}
+                              title="Excluir produto"
+                            >
+                              <TrashIcon />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -232,6 +265,22 @@ export default function Dashboard() {
         onApply={handleFilterApply}
         initialStatus={filters.status}
         initialProduto={filters.produto}
+      />
+
+      <ConfirmModal
+        open={!!productToDelete}
+        onClose={() => setProductToDelete(null)}
+        onConfirm={handleConfirmExcluir}
+        title="Excluir produto"
+        message={
+          productToDelete
+            ? `Excluir o produto "${productToDelete.produto}"? Os produtos relacionados também serão excluídos.`
+            : ""
+        }
+        confirmLabel="Excluir"
+        cancelLabel="Cancelar"
+        variant="danger"
+        loading={excluindoId !== null}
       />
     </div>
   );

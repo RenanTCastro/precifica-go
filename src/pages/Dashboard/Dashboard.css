@@ -231,6 +231,13 @@
   color: var(--color-text-auxiliary);
 }
 
+/* Table actions */
+.dashboard__table-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
 /* Ver mais button */
 .dashboard__btn-ver-mais {
   display: inline-flex;
@@ -252,6 +259,35 @@
 }
 
 .dashboard__btn-ver-mais svg {
+  flex-shrink: 0;
+}
+
+/* Excluir button */
+.dashboard__btn-excluir {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-sm);
+  font-size: var(--text-body-sm);
+  color: #b91c1c;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-input);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.dashboard__btn-excluir:hover:not(:disabled) {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.dashboard__btn-excluir:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dashboard__btn-excluir svg {
   flex-shrink: 0;
 }
 

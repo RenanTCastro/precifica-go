@@ -115,3 +115,14 @@ export async function atualizarProduto(id, payload) {
   if (!res.ok) throw new Error(data.error || "Erro ao atualizar produto");
   return data;
 }
+
+export async function excluirProduto(id) {
+  const res = await fetch(`${API_URL}/produtos/${id}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  });
+
+  if (res.status === 204) return;
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Erro ao excluir produto");
+}
