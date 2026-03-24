@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { unstable_usePrompt } from "react-router-dom";
 import { Button, Input, Sidebar } from "../../components";
 import { PricingTable } from "../../components/PricingTable/PricingTable";
 import { buscarProdutosMercado, salvarProduto, atualizarProduto } from "../../services/api";
@@ -58,6 +59,21 @@ export default function Precificacao() {
     currentValues.custosVariaveis !== savedValues.custosVariaveis ||
     currentValues.margemSelecionada !== savedValues.margemSelecionada;
   const isDirty = formDirty || relacionadosDirty;
+
+  unstable_usePrompt({
+    when: isDirty,
+    message: "Você tem informações não salvas. Deseja sair mesmo assim?",
+  });
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isDirty) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isDirty]);
 
   // Inicializa quantidades a partir do nome do produto quando produtos mudam
   useEffect(() => {
@@ -161,6 +177,23 @@ export default function Precificacao() {
     }
   };
 
+  const handleNovoProduto = () => {
+    setNomeProduto(INITIAL_VALUES.nomeProduto);
+    setPrecoCusto(INITIAL_VALUES.precoCusto);
+    setCustosFixos(INITIAL_VALUES.custosFixos);
+    setCustosVariaveis(INITIAL_VALUES.custosVariaveis);
+    setMargemSelecionada(INITIAL_VALUES.margemSelecionada);
+    setSavedValues(INITIAL_VALUES);
+    setProdutosMercado([]);
+    setQuantidades({});
+    setDesativados({});
+    setProdutoId(null);
+    setRelacionadosDirty(false);
+    setUltimoNomeBuscado(INITIAL_VALUES.nomeProduto);
+    setErroBusca(null);
+    setErroSalvar(null);
+  };
+
   return (
     <div className="precificacao">
       <Sidebar
@@ -175,6 +208,9 @@ export default function Precificacao() {
             <h1 className="precificacao__title">Precificação</h1>
             <p className="precificacao__subtitle">Calcule e compare com o mercado</p>
           </div>
+          <Button variant="secondary" onClick={handleNovoProduto}>
+            Criar novo produto
+          </Button>
         </header>
 
         <div className="precificacao__layout">

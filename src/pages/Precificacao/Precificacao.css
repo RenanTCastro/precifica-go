@@ -14,7 +14,12 @@
 }
 
 .precificacao__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
   margin-bottom: var(--space-xl);
+  flex-wrap: wrap;
 }
 
 .precificacao__title {
