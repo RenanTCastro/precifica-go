@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "../Modal/Modal";
 import { Button, Input } from "../index";
 import "./FilterModal.css";
@@ -8,12 +8,18 @@ const STATUS_OPTIONS = [
   { value: "competitivo", label: "Competitivo" },
   { value: "abaixo", label: "Abaixo do mercado" },
   { value: "acima", label: "Acima do mercado" },
-  { value: "margem-baixa", label: "Margem baixa" },
 ];
 
-export function FilterModal({ open, onClose, onApply }) {
-  const [status, setStatus] = useState("");
-  const [produto, setProduto] = useState("");
+export function FilterModal({ open, onClose, onApply, initialStatus = "", initialProduto = "" }) {
+  const [status, setStatus] = useState(initialStatus);
+  const [produto, setProduto] = useState(initialProduto);
+
+  useEffect(() => {
+    if (open) {
+      setStatus(initialStatus);
+      setProduto(initialProduto);
+    }
+  }, [open, initialStatus, initialProduto]);
 
   const handleApply = () => {
     onApply?.({ status, produto });
