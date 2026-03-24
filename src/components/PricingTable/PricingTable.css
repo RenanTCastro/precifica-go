@@ -21,6 +21,29 @@
   letter-spacing: 0.5px;
 }
 
+.pricing-table__th-sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.pricing-table__th-sortable:hover {
+  color: var(--color-text-primary);
+  background: var(--color-divider);
+}
+
+.pricing-table__th-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pricing-table__th-sort-placeholder {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+}
+
 .pricing-table td {
   padding: var(--space-md) var(--space-lg);
   border-bottom: 1px solid var(--color-divider);
@@ -29,6 +52,38 @@
 
 .pricing-table tbody tr:hover {
   background: var(--color-bg);
+}
+
+.pricing-table__th-checkbox {
+  width: 48px;
+  text-align: center;
+}
+
+.pricing-table__checkbox {
+  width: 48px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.pricing-table__checkbox input {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+}
+
+.pricing-table__row--desativada {
+  opacity: 0.5;
+  color: var(--color-text-auxiliary);
+}
+
+.pricing-table__row--desativada .pricing-table__produto {
+  color: var(--color-text-auxiliary);
+}
+
+.pricing-table__row--desativada .pricing-table__select:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
 }
 
 .pricing-table__img {

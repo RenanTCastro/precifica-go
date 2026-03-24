@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Input, Sidebar } from "../../components";
 import { PricingTable } from "../../components/PricingTable/PricingTable";
 import { buscarProdutosMercado } from "../../services/api";
+import { extrairQuantidadeDoNome } from "../../utils/quantidadeParser";
 import "./Precificacao.css";
 
 function calcularPrecoSugerido(custo, margem, custosFixos = 0, custosVariaveis = 0) {
@@ -22,8 +23,21 @@ export default function Precificacao() {
   const [custosVariaveis, setCustosVariaveis] = useState(0);
   const [margemSelecionada, setMargemSelecionada] = useState(30);
   const [produtosMercado, setProdutosMercado] = useState([]);
+  const [quantidades, setQuantidades] = useState({});
+  const [desativados, setDesativados] = useState({});
   const [isBuscandoProdutos, setIsBuscandoProdutos] = useState(false);
   const [erroBusca, setErroBusca] = useState(null);
+
+  // Inicializa quantidades a partir do nome do produto quando produtos mudam
+  useEffect(() => {
+    if (produtosMercado.length === 0) return;
+    const init = {};
+    produtosMercado.forEach((p) => {
+      init[p.id] = extrairQuantidadeDoNome(p.produto);
+    });
+    setQuantidades(init);
+    setDesativados({});
+  }, [produtosMercado]);
 
   const precoSugerido = calcularPrecoSugerido(precoCusto, margemSelecionada, custosFixos, custosVariaveis);
 
@@ -35,12 +49,31 @@ export default function Precificacao() {
     { margem: margemDep, preco: calcularPrecoSugerido(precoCusto, margemDep, custosFixos, custosVariaveis) },
   ];
 
-  const menorPreco = produtosMercado.length ? Math.min(...produtosMercado.map((p) => p.preco)) : 0;
-  const maiorPreco = produtosMercado.length ? Math.max(...produtosMercado.map((p) => p.preco)) : 0;
+  // Produtos ativos: não desativados. Stats usam preço unitário.
+  const produtosAtivos = produtosMercado.filter((p) => !desativados[p.id]);
+  const precosUnitariosAtivos = produtosAtivos.map((p) => {
+    const qtd = quantidades[p.id] ?? 1;
+    return p.preco / qtd;
+  });
+  const menorPreco = precosUnitariosAtivos.length ? Math.min(...precosUnitariosAtivos) : 0;
+  const maiorPreco = precosUnitariosAtivos.length ? Math.max(...precosUnitariosAtivos) : 0;
   const precoMedio =
-    produtosMercado.length > 0
-      ? produtosMercado.reduce((acc, p) => acc + p.preco, 0) / produtosMercado.length
+    precosUnitariosAtivos.length > 0
+      ? precosUnitariosAtivos.reduce((acc, v) => acc + v, 0) / precosUnitariosAtivos.length
       : 0;
+
+  const handleQuantidadeChange = (id, val) => {
+    setQuantidades((prev) => ({ ...prev, [id]: Number(val) }));
+  };
+
+  const handleDesativarChange = (id, ativo) => {
+    setDesativados((prev) => {
+      const next = { ...prev };
+      if (ativo) delete next[id];
+      else next[id] = true;
+      return next;
+    });
+  };
 
   const handleCalcular = async () => {
     setErroBusca(null);
@@ -195,7 +228,14 @@ export default function Precificacao() {
             </div>
 
             <div className="precificacao__table-section">
-              <PricingTable produtos={produtosMercado} precoSugerido={precoSugerido} />
+              <PricingTable
+                produtos={produtosMercado}
+                precoSugerido={precoSugerido}
+                quantidades={quantidades}
+                desativados={desativados}
+                onQuantidadeChange={handleQuantidadeChange}
+                onDesativarChange={handleDesativarChange}
+              />
             </div>
           </section>
         </div>
